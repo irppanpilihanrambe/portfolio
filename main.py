@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.core.config import settings
+from app.config import settings
 from app.routers import projects, contacts, admin
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
