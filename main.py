@@ -6,9 +6,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 
-# IMPORT INI SESUAI STRUKTUR PROJECT KAMU
-
-from app.routers import projects, contacts, admin_router
+from app.core.config import settings
+from app.routers import projects, contacts, admin
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -49,7 +48,7 @@ templates = Jinja2Templates(
 # Routers
 app.include_router(projects.router)
 app.include_router(contacts.router)
-app.include_router(admin_router.router)
+app.include_router(admin.router)
 
 
 @app.get("/", include_in_schema=False)
