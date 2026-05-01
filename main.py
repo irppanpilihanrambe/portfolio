@@ -1,26 +1,20 @@
 import os
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from contextlib import asynccontextmanager
+from fastapi.middleware.cors import CORSMiddleware
 
-# Tambahkan ini untuk deteksi folder secara otomatis
+# IMPORT INI SESUAI STRUKTUR PROJECT KAMU
+from core.config import settings
+from routers import projects, contacts, admin_router
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-app = FastAPI()
-
-# Ubah bagian ini agar menggunakan BASE_DIR
-app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
-templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
-
-# Tambahkan handler di paling bawah
-handler = app
-
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # await init_db()  <-- KASIH TANDA PAGAR DI DEPANNYA
     yield
 
 
@@ -42,8 +36,15 @@ app.add_middleware(
 )
 
 # Static files & templates
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+app.mount(
+    "/static",
+    StaticFiles(directory=os.path.join(BASE_DIR, "static")),
+    name="static"
+)
+
+templates = Jinja2Templates(
+    directory=os.path.join(BASE_DIR, "templates")
+)
 
 # Routers
 app.include_router(projects.router)
@@ -51,21 +52,26 @@ app.include_router(contacts.router)
 app.include_router(admin_router.router)
 
 
-# ── Page Routes ───────────────────────────────────────────────
-
 @app.get("/", include_in_schema=False)
 async def landing(request: Request):
-    return templates.TemplateResponse("index.html", {
-        "request": request,
-        "title": settings.APP_TITLE,
-    })
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "title": settings.APP_TITLE,
+        },
+    )
 
 
 @app.get("/admin", include_in_schema=False)
 async def admin_page(request: Request):
-    return templates.TemplateResponse("admin.html", {
-        "request": request,
-        "title": "Admin Panel | " + settings.APP_TITLE,
-    })
-    # Tambahkan ini di baris paling bawah agar dikenali Vercel
-app = app
+    return templates.TemplateResponse(
+        "admin.html",
+        {
+            "request": request,
+            "title": "Admin Panel | " + settings.APP_TITLE,
+        },
+    )
+
+
+handler = app
