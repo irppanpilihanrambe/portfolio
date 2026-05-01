@@ -61,3 +61,5 @@ async def admin_page(request: Request):
         "request": request,
         "title": "Admin Panel | " + settings.APP_TITLE,
     })
+    # Tambahkan ini di baris paling bawah agar dikenali Vercel
+app = app
