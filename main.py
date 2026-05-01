@@ -1,14 +1,19 @@
+import os
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
 
-from app.database import init_db
-from app.config import get_settings
-from app.routers import projects, contacts, admin as admin_router
+# Tambahkan ini untuk deteksi folder secara otomatis
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-settings = get_settings()
+app = FastAPI()
+
+# Ubah bagian ini agar menggunakan BASE_DIR
+app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
+
+# Tambahkan handler di paling bawah
+handler = app
 
 
 
