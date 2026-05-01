@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 
 # IMPORT INI SESUAI STRUKTUR PROJECT KAMU
-from app.core.config import settings
+
 from app.routers import projects, contacts, admin_router
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
